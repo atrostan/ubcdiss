@@ -1,0 +1,36 @@
+
+\chapter{Related Work}
+\label{ch:relatedwork}
+\textbf{Related Work}
+    \begin{enumerate}[label*=\arabic*.]
+      \item {\textbf{Vertex Centric vs. Edge Centric Graph processing systems}}
+      \begin{itemize}
+        \item Define and describe the differences between Vertex Centric and Edge Centric GPS;
+        \item Define CSR in the context of in-memory graph processing systems, and explain how this in-memory representation can cause many cache misses by iterating over the edges of the graph in a 
+        vertex centric manner: 
+        \begin{itemize}
+          \item For each source vertex, access via the destination vertex to the \texttt{vdata} array is close to random.
+        \end{itemize}
+        \item Covers: Ligra, GraphChi, Pre-select Static Caching, Mosaic, X-stream, FlashGraph
+      \end{itemize}
+      \item{\textbf{Vertex Ordering}
+      \begin{enumerate}[label*=\arabic*.]
+        \item{\textbf{Lightweight Reordering Techniques}; Define and motivate the concept of vertex reordering to speed up graph processing. Define Lightweight reordering.  
+        Introduce HubCluster, HubSort, Degree Sort, Degree-Based-Grouping. Introduce techniques that are computationally expensive: e.g., Gorder. Discuss techniques that are 
+        not lightweight, and not heavyweight: Rabbit-order, Parallel SlashBurn, Parallel Cuthill-McKee. The cost of a preprocessing should be jointly considered with the runtime of the application: that is, for what size of graph and for how many executions of a graph algorithm does the speedup balance out the ordering time?}
+      \end{enumerate}
+      }
+      \item{\textbf{Edge Ordering / Hilbert Ordering}
+        Introduce the concept of edge ordering. Introduce COST, and discuss the speedups they observed when using the Hilbert curve. Describe other fields in computer science that have used the Hilbert curve to speed up performance (e.g., Image/video rendering). Define the Hilbert Curve, how to compute it, the computational cost of computing it, 
+        how computing it is easily parallelizable, and why it produces an improvement in performance for (certain) graph algorithms.
+      }
+      \item{\textbf{Vertex-and-edge Ordering: Leveraging the potential Interaction between Vertex and Edge Ordering}
+      Discuss how vertex ordering can produce adjacency matrices with inherent structure that can be leveraged with efficient edge-centric traversals that avoid large empty regions, and traverse filled regions 
+      using the Hilbert space filling curve. Introduce in-Hub Temporal Locality - a similar technique that identifies blocks in the adjacency matrix, and applies a suitable traversal direction (push or pull) based on the block's content.
+      }
+    \item{\textbf{Graph Statistics}
+      Introduce the question: how can we model a graph using features? If we want to model the performance of different reordering algorithms on different graphs, it would be helpful to have a representation of a graph using
+      statistical features: We would expect that two graphs that are ``close'' to each other in this feature space, to perform similarly when using a combination of vertex-and-edge ordering. Briefly introduce Graph Representation Learning and argue that while recent advances may have produced \ac{GNN} architectures that can process large scale graphs, the produced models are generally opaque, and will not yield much insight as to \textit{why} a certain
+      vertex-and-edge ordering produces performance improvement. Introduce Konect and their statistics. Present a table of statistics. Statistics are grouped into categories: Algebraic, Distance, Degree, Powerlaw, and Motif counts.
+    }
+    \end{enumerate}

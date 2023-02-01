@@ -1,0 +1,45 @@
+
+\chapter{Background}
+\label{ch:Background}
+
+\section{In Memory Graph Data Structures}
+\par{
+    % We introduce ways to represent graphs in memory. We describe the conventional Adjacency matrix and 
+    % list representations of a graph, and how the vertices and edges of the graph are stored using 
+    % these data structures. Next, we introduce the commonly used, efficient   
+    % \ac{CSR}/\ac{CSC}
+    % graph representations, and illustrate challenges that arise from representing large graphs using these
+    % compressed representations. 
+    We introduce various methods for storing graphs in memory, including the traditional Adjacency Matrix and List representations. We explain how vertices and edges are stored using these data structures. We then present the efficient Compressed Sparse Row (CSR) and Compressed Sparse Column (CSC) representations commonly used for large graphs and highlight the challenges that arise when using these compressed representations.
+}
+\subsection{Adjacency Matrix}
+\subsection{Adjacency List}
+\subsection{Compressed Representations}
+\subsubsection{Compressed Sparse Row, Column}
+\subsection{Memory Access Patterns and Bottlenecks in Graph processing}
+
+\section{Graph Ordering}
+% In an attempt to alleviate the issues described above, a wealth of previous work has gone into research
+% about Graph Ordering Techniques. These techniques reorder (i.e. relabel) either the vertices or edges of the graph to improve the memory access locality exhibited when traversing over the graph. First, we define spatial locality, and show how vertex reordering can be leveraged to improve it. We also introduce the concepts of light, mid, and heavyweight vertex reordering techniques, and list related examples. Second,
+% we define temporal locality, and show how edge reordering can be leveraged to improve it. Finally, we introduce the \ac{HSFC}, and describe its advantages in the context of improving temporal locality of edge traversals.
+
+To address the problems mentioned above, there has been a significant amount of research on Graph Ordering Techniques. These techniques rearrange either the vertices or edges of a graph to enhance the memory access locality during graph traversal. We first define spatial locality and demonstrate how vertex reordering can improve it. We also categorize vertex reordering techniques into light, mid, and heavyweight techniques and provide examples. Next, we define temporal locality and explain how edge reordering can optimize it. Finally, we introduce the Hilbert Space Filling Curve and highlight its benefits in improving the temporal locality of edge traversals
+
+\subsection{Spatial Graph Transforms: Vertex Reordering}
+\subsubsection{LightWeight, HeavyWeight, MidWeight, Slashburn}
+\subsection{Temporal Graph Transforms: Edge Reordering}
+\subsubsection{Hilbert Curve}
+
+\section{PageRank}
+% Next, we discuss the PageRank algorithm and challenges that arise when attempting to parallelize it. 
+% We introduce the algorithm and reason about why it became such a ubiqutous graph processing benchmark.
+% We differentiate between the two computational modes of the algorithm. Finally, we divert our attention to challenges that arise in the context of parallelization. Finally, we introduce Propagation Blocking, a recent optimization used to improve the spatial locality of parallel PageRank computation.
+
+In the next section, we examine the PageRank algorithm and the difficulties associated with parallelizing it. We present the algorithm and explore its widespread use as a benchmark in graph processing. We distinguish between the two modes of computation that can be used to compute a graph's PageRank algorithm. Then, we focus on the challenges in parallelizing the algorithm. Finally, we introduce Propagation Blocking, a recent optimization aimed at enhancing the spatial locality in parallel PageRank computation.
+\subsection{Pull vs. Push}
+\subsection{Parallelelizing Computation}
+\par{
+}
+\subsubsection{Propagation Blocking}
+\section{Symbols}
+\input{tables/symbols}
