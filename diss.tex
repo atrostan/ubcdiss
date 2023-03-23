@@ -36,6 +36,11 @@
 % \documentclass[balanced,twoside,11pt]{ubcdiss}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Additional
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%
 %% FONTS:
@@ -56,10 +61,11 @@
 \usepackage[scaled=.92]{helvet}
 
 %% Math or theory people may want to include the handy AMS macros
-%\usepackage{amssymb}
-%\usepackage{amsmath}
-%\usepackage{amsfonts}
-
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{blindtext}
+\usepackage{tabularx}
 %% The pifont package provides access to the elements in the dingbat font.   
 %% Use \ding{##} for a particular dingbat (see p7 of psnfss2e.pdf)
 %%   Useful:
@@ -269,7 +275,7 @@
 \(\rightarrow\) pages #2%
 \fi}}
 
-
+\usepackage{bookmark}
 %% The following uses most defaults, which causes hyperlinks to be
 %% surrounded by colourful boxes; the colours are only visible in
 %% PDFs and don't show up when printed:
@@ -311,7 +317,7 @@
 
 %% And include some of our own useful macros
 \input{macros}
-
+\input{annotations}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%
@@ -356,7 +362,9 @@
   pdfauthor={Alex Trostanovsky},
   pdfkeywords={Graph ordering}
 }
-
+\usepackage{cleveref}
+\usepackage[group-separator={,}]{siunitx}
+\usepackage[inkscapeformat=png]{svg}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% 
@@ -431,6 +439,8 @@
 
 %    1. Introduction
 \include{intro}
+\include{overview}
+
 
 %    2. Main body
 % Generally recommended to put each chapter into a separate file
@@ -438,6 +448,7 @@
 \include{relatedwork}
 %\include{model}
 %\include{impl}
+\include{eval}
 %\include{discussion}
 %\include{conclusions}
 
