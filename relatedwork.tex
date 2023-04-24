@@ -2,35 +2,123 @@
 \chapter{Related Work}
 \label{ch:relatedwork}
 \textbf{Related Work}
-    \begin{enumerate}[label*=\arabic*.]
-      \item {\textbf{Vertex Centric vs. Edge Centric Graph processing systems}}
-      \begin{itemize}
-        \item Define and describe the differences between Vertex Centric and Edge Centric GPS;
-        \item Define CSR in the context of in-memory graph processing systems, and explain how this in-memory representation can cause many cache misses by iterating over the edges of the graph in a 
-        vertex centric manner: 
+\begin{enumerate}[label*=\arabic*.]
+  \item {\textbf{Vertex Centric vs. Edge Centric Graph processing systems}}
         \begin{itemize}
-          \item For each source vertex, access via the destination vertex to the \texttt{vdata} array is close to random.
+          \item Define and describe the differences between Vertex Centric and Edge Centric GPS;
+          \item Define CSR in the context of in-memory graph processing systems, and explain how this in-memory representation can cause many cache misses by iterating over the edges of the graph in a
+                vertex centric manner:
+                \begin{itemize}
+                  \item For each source vertex, access via the destination vertex to the \texttt{vdata} array is close to random.
+                \end{itemize}
+          \item Covers: Ligra, GraphChi, Pre-select Static Caching, Mosaic, X-stream, FlashGraph
         \end{itemize}
-        \item Covers: Ligra, GraphChi, Pre-select Static Caching, Mosaic, X-stream, FlashGraph
-      \end{itemize}
-      \item{\textbf{Vertex Ordering}
-      \begin{enumerate}[label*=\arabic*.]
-        \item{\textbf{Lightweight Reordering Techniques}; Define and motivate the concept of vertex reordering to speed up graph processing. Define Lightweight reordering.  
-        Introduce HubCluster, HubSort, Degree Sort, Degree-Based-Grouping. Introduce techniques that are computationally expensive: e.g., Gorder. Discuss techniques that are 
-        not lightweight, and not heavyweight: Rabbit-order, Parallel SlashBurn, Parallel Cuthill-McKee. The cost of a preprocessing should be jointly considered with the runtime of the application: that is, for what size of graph and for how many executions of a graph algorithm does the speedup balance out the ordering time?}
-      \end{enumerate}
-      }
-      \item{\textbf{Edge Ordering / Hilbert Ordering}
-        Introduce the concept of edge ordering. Introduce COST, and discuss the speedups they observed when using the Hilbert curve. Describe other fields in computer science that have used the Hilbert curve to speed up performance (e.g., Image/video rendering). Define the Hilbert Curve, how to compute it, the computational cost of computing it, 
-        how computing it is easily parallelizable, and why it produces an improvement in performance for (certain) graph algorithms.
-      }
-      \item{\textbf{Vertex-and-edge Ordering: Leveraging the potential Interaction between Vertex and Edge Ordering}
-      Discuss how vertex ordering can produce adjacency matrices with inherent structure that can be leveraged with efficient edge-centric traversals that avoid large empty regions, and traverse filled regions 
-      using the Hilbert space filling curve. Introduce in-Hub Temporal Locality - a similar technique that identifies blocks in the adjacency matrix, and applies a suitable traversal direction (push or pull) based on the block's content.
-      }
-    \item{\textbf{Graph Statistics}
-      Introduce the question: how can we model a graph using features? If we want to model the performance of different reordering algorithms on different graphs, it would be helpful to have a representation of a graph using
-      statistical features: We would expect that two graphs that are ``close'' to each other in this feature space, to perform similarly when using a combination of vertex-and-edge ordering. Briefly introduce Graph Representation Learning and argue that while recent advances may have produced \ac{GNN} architectures that can process large scale graphs, the produced models are generally opaque, and will not yield much insight as to \textit{why} a certain
-      vertex-and-edge ordering produces performance improvement. Introduce Konect and their statistics. Present a table of statistics. Statistics are grouped into categories: Algebraic, Distance, Degree, Powerlaw, and Motif counts.
-    }
-    \end{enumerate}
+        \item{\textbf{Vertex Ordering}
+                    \begin{enumerate}[label*=\arabic*.]
+                      \item{\textbf{Lightweight Reordering Techniques}; Define and motivate the concept of vertex reordering to speed up graph processing. Define Lightweight reordering.
+                                  Introduce HubCluster, HubSort, Degree Sort, Degree-Based-Grouping. Introduce techniques that are computationally expensive: e.g., Gorder. Discuss techniques that are
+                                  not lightweight, and not heavyweight: Rabbit-order, Parallel SlashBurn, Parallel Cuthill-McKee. The cost of a preprocessing should be jointly considered with the runtime of the application: that is, for what size of graph and for how many executions of a graph algorithm does the speedup balance out the ordering time?}
+                    \end{enumerate}
+              }
+        \item{\textbf{Edge Ordering / Hilbert Ordering}
+                    Introduce the concept of edge ordering. Introduce COST, and discuss the speedups they observed when using the Hilbert curve. Describe other fields in computer science that have used the Hilbert curve to speed up performance (e.g., Image/video rendering). Define the Hilbert Curve, how to compute it, the computational cost of computing it,
+                    how computing it is easily parallelizable, and why it produces an improvement in performance for (certain) graph algorithms.
+              }
+        \item{\textbf{Vertex-and-edge Ordering: Leveraging the potential Interaction between Vertex and Edge Ordering}
+                    Discuss how vertex ordering can produce adjacency matrices with inherent structure that can be leveraged with efficient edge-centric traversals that avoid large empty regions, and traverse filled regions
+                    using the Hilbert space filling curve. Introduce in-Hub Temporal Locality - a similar technique that identifies blocks in the adjacency matrix, and applies a suitable traversal direction (push or pull) based on the block's content.
+              }
+        \item{\textbf{Graph Statistics}
+                    Introduce the question: how can we model a graph using features? If we want to model the performance of different reordering algorithms on different graphs, it would be helpful to have a representation of a graph using
+                    statistical features: We would expect that two graphs that are ``close'' to each other in this feature space, to perform similarly when using a combination of vertex-and-edge ordering. Briefly introduce Graph Representation Learning and argue that while recent advances may have produced \ac{GNN} architectures that can process large scale graphs, the produced models are generally opaque, and will not yield much insight as to \textit{why} a certain
+                    vertex-and-edge ordering produces performance improvement. Introduce Konect and their statistics. Present a table of statistics. Statistics are grouped into categories: Algebraic, Distance, Degree, Powerlaw, and Motif counts.
+              }
+\end{enumerate}
+
+% Papers I gotta cover:
+% \begin{enumerate}
+%   \item gpop, syze, propagation blocking, spray
+%   \item cagra, mcsherry
+%   \item when is lightweight reordering an optimization
+%   \item degree based Grouping
+%   \item SlashBurn
+%   \item Ligra
+%   \item Vertex and edge ordering : in-Hub temporal Locality
+%   \item
+% \end{enumerate}
+
+% MIS Questions:
+
+\newpage
+\begin{enumerate}
+  \item \textbf{What is the body of work out of which your work grew?}
+        \AT{
+          \begin{itemize}
+            \item ``When is Lightweight Reordering an Optimization''.
+                  \begin{itemize}
+                    \item Showcases the benefit that can be gained by vertex reordering, but also that there exist light and heavyweight reorderings, and that heavyweight techniques may sometimes not be worth the effort.
+                          % reordering gives benefits
+                          % \item There are heavy weight and light weight technicques
+                          % \item Heavy weight techniques sometimes take longer to compute than the actual algorithm.
+                  \end{itemize}
+                  \item{SlashBurn}
+                  % \item McSherry usage of the Hilbert curve.
+            \item ``Propagation Blocking'' - mentioned that parallelizing edge-centric computation using the Hilbert curve may be complicated.
+            \item ``Cagra'' - did parallelize the hilbert curve, but reported horrible scaling. I still think the reason for this was was a n{\"a}ive implementation -- not that it was impossible (in fact, Rhubarb shows that it \textit{is} possible!).
+            \item Finally, the recent ``Spray: Sparse Reductions of Arrays in OPENMP'' publication, which addressed the issue with OpenMP dense array reductions being unable to scale.
+          \end{itemize}
+        }
+
+  \item \textbf{What work inspired you?}
+        \AT{
+          \begin{itemize}
+            \item \citet{cost}'s use of the Hilbert curve and the notable Single-threaded speedup they achieved simply by iterating over the edges of the graph in a different edge-order.
+          \end{itemize}
+        }
+
+  \item \textbf{To which work should you be comparing your approach?}
+        \AT{
+          \begin{itemize}
+            \item Since Rhubarb only supports edge-centric algorithms, Rhubarb should be compared to
+                  Graph Processing Systems that either provide or enable implementation of such algorithms. In our evaluation, we've chosen to use the following EC algorithms: PageRank, Connected Components, and Collaborative Filtering.
+                  As such, we've chosen the following GPS to compare Rhubarb to:
+          \end{itemize}
+          \begin{enumerate}
+            \item \textbf{Ligra} - a de-facto main-memory, parallel graph processing system that provides implementations of PR, CC, and CF. Ligra is a great baseline to compare against for the following reasons:
+                  \begin{enumerate}
+                    \item It uses Cilk's work stealing scheduler to provide efficient, parallel implementations of the algorithms used in my evaluation.
+                    \item It \textit{does not} use any optimization with regards to the graph representation (i.e. like GPOP and Syze do with their graph partitioning schemes). Specifically, each iteration of PR or CF in Ligra involves iterating over
+                          all the edges in the graph -- which is exactly what Rhubarb does, too. So, the amount of work done per iteration is comparable between Ligra and Rhubarb.
+                  \end{enumerate}
+            \item \textbf{GPOP} - was the SOTA when it was published (2020). Uses Partition-Centric Processing Methodology (PCPM) to partition the graph into cacheable subgraphs.  In PCPM, edges from the same source vertex that point out to multiple destination vertices inside the same subgraph are compressed into one inter-edge to reduce memory traffic \cite{syze}. For this reason, GPOP does substantially less work (measured in the number of updates written to a vertex data array in each iteration) than Rhubarb.
+            \item \textbf{Syze} - is a recently published optimization of GPOP which addressed an issue in GPOP: the subgraphs produced by GPOP may have been imbalanced in the number of edges they contained - so Syze identifies demanding subgraphs (ones that contain an unequal number of edges) and further subdivides them until a certain threshold is met.
+          \end{enumerate}
+        }
+
+\end{enumerate}
+
+\AT{Here is the outline of the Related Work chapter which will answer the questions above and place Rhubarb in the current landscape of Graph Reordering.}
+
+
+This chapter provides an overview of the current state of Graph Reordering as an optimization being used for graph processing. We highlight key research questions that arise from recent advancements in this field, along with the techniques that facilitated the development of Rhubarb. Additionally, we describe the GPS we used to compare Rhubarb's performance and explain our rationale for selecting them as the benchmark for comparison.
+
+\section{When is Vertex Reordering an Optimization?}
+This section is an introduction to Vertex Reordering and its use in accelerating graph processing. We reference the work of \citet{lwr} to define lightweight and heavyweight reorderings, and highlight how certain heavyweight Vertex Reordering techniques may result in significant preprocessing overhead that outweighs any potential performance gains.
+
+
+% This section introduces Vertex Reordering and how and why it may be used to speed up graph processing. We introduce the work of \citet{lwr} to define \textit{lightweight} and \textit{heavyweight} reorderings, and how certain \textit{heavyweight} Vertex Reordering techniques may introduce such high overhead during preprocessing that any performance improvements gained are completely negated.
+
+% any performance improvements gained in the first place. 
+
+% concept of the high overhead introduced by certain \textit{heavyweight} Vertex reordering techniques may, in certain cases, negate the performance improvements gained by vertex reordering in the first place. 
+
+\section{SlashBurn}\AT{
+  I actually think it makes more sense to describe SlashBurn in the chapter devoted to my implementation of Parallel Slashburn.
+}
+
+
+\section{Using the Hilbert Curve to Speed Up Edge-Centric Graph Algorithms}
+This section introduces the work of \citet{cost}, which used the Hilbert curve to ameliorate the poor read and write locality of graph traversals. This finding inspired the development of Rhubarb. We also discuss related work that has explored parallelization of edge-centric computation using the Hilbert curve, and highlight how the recent work of \citet{spray} has facilitated the development of Rhubarb.
+
+\section{The Current Main-Memory Graph Processing Landscape}
+We conclude this chapter by discussing Graph Processing systems that benefit from Vertex ordering and provide implementations of popular Edge-centric algorithms. First, we introduce Ligra \cite{ligra}, a de-facto main-memory GPS that is commonly used as a baseline for comparison for new optimizations and systems. Next, we discuss GPOP \cite{gpop}, and their use of Partition Centric Processing Methodology (PCPM) \cite{pcpm} to improve the cache behaviour of graph algorithms. We conclude this section with a discussion of Syze \cite{syze}, a recently published optimization of GPOP.
