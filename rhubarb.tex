@@ -36,7 +36,7 @@ Finally, we describe our implementation of three edge-centric algorithms: PageRa
 
 
 \section{Parallelizing Edge-Centric Computation}
-Parallelizing edge-centric computation using the Hilbert Space Filling Curve involves splitting the graph's adjacency matrix into equally sized quadrants and assigning each thread the edges in each quadrant. However, two issues arise from this na\"{\i}ve  parallelization approach:
+A simple way to parallelize edge-centric computation using the Hilbert Space Filling Curve would be to split the graph's adjacency matrix into equally sized quadrants and to assign each thread the edges in each quadrant. However, two issues arise from this na\"{\i}ve  parallelization approach:
 
 
 \begin{itemize}
