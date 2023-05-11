@@ -70,9 +70,16 @@
 \usepackage{tabularx}
 \usepackage{algorithm}
 \usepackage{algorithmicx}
-\usepackage{algpseudocode}
+\usepackage[noend]{algpseudocode}
 % \usepackage{subcaption}
-
+% declaration of the new block
+\algblock{ParFor}{EndParFor}
+% customising the new block
+\algnewcommand\algorithmicparfor{\textbf{parallel\_for}}
+\algnewcommand\algorithmicpardo{\textbf{do}}
+\algnewcommand\algorithmicendparfor{\textbf{end\ parallel\_for}}
+\algrenewtext{ParFor}[1]{\algorithmicparfor\ #1\ \algorithmicpardo}
+\algrenewtext{EndParFor}{\algorithmicendparfor}
 %% The pifont package provides access to the elements in the dingbat font.   
 %% Use \ding{##} for a particular dingbat (see p7 of psnfss2e.pdf)
 %%   Useful:
@@ -386,6 +393,13 @@
 %\includeonly{intro,conclusions}
 %\includeonly{discussion}
 
+\graphicspath {{figures/}}
+\graphicspath {{plots/}}
+\graphicspath {{ipe_plots/}}
+
+\usepackage{changepage}
+
+
 \begin{document}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -401,7 +415,8 @@
 \makecommitteepage
 
 %    3. Abstract (mandatory - maximum 350 words)
-\include{abstract}
+% \include{abstract}
+\include{chapters/abstract}
 \cleardoublepage
 
 %    4. Lay Summary (Effective May 2017, mandatory - maximum 150 words)
@@ -446,20 +461,20 @@
 
 
 %    1. Introduction
-\include{intro}
+\include{chapters/intro}
 \include{overview}
 
 
 %    2. Main body
 % Generally recommended to put each chapter into a separate file
-\include{background}
-\include{relatedwork}
-\include{case}
+\include{chapters/background}
+\include{chapters/relatedwork}
+\include{chapters/case}
 
 %\include{model}
 %\include{impl}
-\include{rhubarb}
-\include{eval}
+\include{chapters/rhubarb}
+\include{chapters/eval}
 %\include{discussion}
 %\include{conclusions}
 
@@ -468,9 +483,9 @@
 
 %    5. Bibliography
 \begin{singlespace}
-\raggedright
-\bibliographystyle{abbrvnat}
-\bibliography{biblio}
+  \raggedright
+  \bibliographystyle{abbrvnat}
+  \bibliography{biblio}
 \end{singlespace}
 
 \appendix

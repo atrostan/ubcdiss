@@ -1,0 +1,63 @@
+\setlength{\arrayrulewidth}{0.5mm}
+\setlength{\tabcolsep}{18pt}
+\renewcommand{\arraystretch}{1.5}
+
+% \begin{lstlisting}
+% Expand left and right margins by 0.75in
+% Must adjust the perceived column width for LaTeX to get with it.
+% \addtolength{\columnwidth}{1.5in}
+% \[ an extra long math formula \]
+
+\begin{table}
+    \centering
+    \begin{adjustwidth}{-0.75in}{-0.75in}
+
+        \begin{tabular}{ |p{2cm}|p{6cm}|p{5cm}|  }
+            % \hline
+            % \multicolumn{3}{|c|}{Country List}                         \\
+            \hline
+            \textbf{Symbol}  & \textbf{Definition}                                                                                                 & \textbf{Notes}                \\
+            \hline
+            $V$              & Vertex Set                                                                                                          & -                             \\
+            \hline
+            $E$              & Edge Set                                                                                                            & -                             \\
+            \hline
+
+            $G(V, E)$        & A graph $G$, with vertex set $V$, and edge set $E$                                                                  & -                             \\
+            \hline
+
+            $G(V, E, w(E))$  & A weighted graph $G$, with vertex set $V$, edge set $E$, and a weight function $w: (V \times V) \mapsto \mathbb{R}$ & -                             \\
+            \hline
+
+
+            $B(V_1, V_2, E)$ & A bipartite graph $B$, with vertex sets $V_1, V_2$, and edge set $E$                                                & -                             \\
+            \hline
+
+            $n$              & The number of vertices in a graph                                                                                   & $|V|$                   \\
+            \hline
+
+            $m$              & The number of edges in a graph                                                                                      & $|E|$                   \\
+            \hline
+
+            $(u, v)$         & The edge between vertices $u, v$                                                                                    & May be directed or undirected \\
+            \hline
+
+            $A$              & The adjacency matrix of the directed graph, $G$                                                                     &                               \\
+            \hline
+            $n^{+/-}(u)$       & The out/in-neighbourhood of vertex $u$                                                                                 &                               \\
+            \hline
+            $n(u)$       & The neighbourhood of vertex $u$                                                                                  &                               \\
+            \hline
+            $deg^{+/-}(u)$     & The out/in-degree of vertex $u$ & $|n^{+}(u)|$/$|n^{-}(u)| $           \\
+            \hline
+            $deg(u)$     & The degree of vertex $u$   & $|n(u)|$            \\
+            \hline
+            $f(G)$     & The fill of a graph & $\frac{m}{n(n-1)}$            \\
+            \hline
+        \end{tabular}
+        \caption{\label{tab:notation}Notation used in this thesis.}
+    \end{adjustwidth}
+\end{table}
+
+
+% \end{lstlisting}
