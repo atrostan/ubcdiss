@@ -485,3 +485,6 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
 *.autosave.ipe
+
+#ignore pandoc text output
+output.txt

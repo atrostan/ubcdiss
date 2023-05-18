@@ -17,17 +17,19 @@
 % %  and describe and categorize a selection of vertex and edge ordering techniques.
 % We conclude this chapter with a discussion of different \textit{modes} of graph computation, and how the hurdles we describe in our introduction of the \ac{CSR} representation are further compounded in the parallel setting.
 
-The focus of this thesis is how to \textit{layout}, or \textit{order}, a graph's elements and data in memory to speed up processing. So, we begin by introducing common data structures that are used to represent graphs in memory. 
+The focus of this thesis is on how to \textit{layout}, or \textit{order}, a graph's elements and data in memory to speed up processing. So, we begin by introducing common data structures that are used to represent graphs in memory. 
 % Once a data structure is selected, how we \textit{layout}, or \textit{order}, the graph's elements and data within the chosen data structure is the main focus of this thesis.
- We define our notation in Table \ref{tab:notation}. We review the conventional graph data structures: the Adjacency List and Adjacency Matrix, and show how they are inadequate for representing large-scale, real-world, sparse graphs. To address these limitations, compressed graph representations like \ac{CSR} and \ac{CSC} are used. 
+ We define our notation in \Cref{tab:notation1,tab:notation2}. We review the conventional graph data structures: the Adjacency List and Adjacency Matrix, and show how they are inadequate for representing large-scale, real-world, sparse graphs. To address these limitations, compressed graph representations like \ac{CSR} and \ac{CSC} are used. 
 % The \ac{CSR} has become the de-facto data structure for in-memory \ac{GPS}, but using it for graph analytics poses challenges that are further exacerbated in the parallel setting.
 We introduce the different modes of parallel graph computation and illustrate the challenges that arise when using the \ac{CSR} representation for parallel graph processing. We conclude by defining \textit{graph ordering}, distinguising between two common methods: Vertex and Edge ordering, and showing how graph
 ordering can address these challenges. 
 \clearpage
 % \section{Notation}
-\input{tables/notation}
+\input{tables/notation1}
+\newpage
+\input{tables/notation2}
 
-\section{In Memory Graph Data Structures}
+\section{In Memory Graph Data Structures}\label{sec:in_mem_structs}
 % \par{
 %     % We introduce ways to represent graphs in memory. We describe the conventional Adjacency matrix and 
 %     % list representations of a graph, and how the vertices and edges of the graph are stored using 
@@ -41,7 +43,7 @@ ordering can address these challenges.
 
 A graph $G(V, E)$ is an ordered pair of a vertex set, $V$, and an edge set $E$. Graphs may be directed and/or weighted. If a graph is directed, $E$ consists of \textit{ordered} pairs of vertices, whereas if $G$ is undirected, edges are \textit{unordered}.
 $n$ is the number of vertices in the graph ($|V|$) and $m$ is the number of edges in the graph ($|E|$).
-Given a directed graph and an edge $(u,v)$, we say that that $v$ is an \textit{out-neighbour} of $u$, $u$ is an in-neighbour of $v$, and that $u$ and $v$ are adjacent. In this thesis, we will assume graphs are directed.
+Given a directed graph and an edge $(u,v)$, we say that that $v$ is an \textit{out-neighbour} of $u$, $u$ is an \textit{in-neighbour} of $v$, $u, v$ are \textit{adjacent}, and $u, v$ are \textit{incident} to the edge $(u,v)$. In this thesis, we will assume graphs are directed.
 If $G$ is a weighted graph, a weight function, $w: (V \times V) \mapsto \mathbb{R}$, maps each edge in the graph to a real value. A graph $B$ is said to be bipartite if $V$ can be decomposed into two disjoint vertex sets $V_1, V_2$, such that no two vertices within a vertex set are adjacent.
 Figure \ref{fig:graph_example}a shows a directed graph, which we will use as a running example to show how the same graph is represented using either an Adjacency Matrix, Adjacency List, or the \ac{CSR} / \ac{CSC} representations.
 
@@ -76,12 +78,12 @@ Figure \ref{fig:graph_example}a shows a directed graph, which we will use as a r
 
 Many real world graphs derived from bioinformatics, social, or hyperlink networks are
 \textit{scale-free} \cite{barabasi2009scale, sapco} and \textit{sparse} \cite{danisch2018listing}.
-A graph is \textit{scale-free} if the degree distribution of its vertices follows a \textit{power-law}, where a small fraction of vertices make up a disproportionately large fraction of the edges of the graph. As such, the vertices of power-law graphs are typically labelled according to their degree. We follow the convention set out by \citet{esfahani2021locality}: the \textit{average degree} of the graph ($\overline{d}$) acts as the threshold between 
+A graph is \textit{scale-free} if the degree distribution of its vertices follows a \textit{power-law}, where a small fraction of vertices are incident to a disproportionately large fraction of the edges of the graph. As such, the vertices of power-law graphs are typically labelled according to their degree. We follow the convention adopted by \citet{esfahani2021locality}: the \textit{average degree} of the graph ($\overline{d}$) acts as the threshold between 
 \textit{low-degree} and \textit{high-degree} vertices, and vertices whose degree is larger than $\sqrt{n}$ are called \textit{hub} vertices. 
 A graph is \textit{sparse} if the number of edges in the graph is substantially smaller than the total number of possible edges (i.e., $m \ll n(n-1)$). 
 
 A graph can be represented using an \textbf{Adjacency Matrix}, $A$ (Figure \ref{fig:graph_example}b), with $A_{i,j}$ corresponding to the edge $(i, j)$. If the graph is unweighted, $A$ is an $n\times n$ boolean matrix, with $A_{i,j} = 1$ indicating the existence of an edge $(i, j)$.
-If the graph is weighted, the nonzero values of $A\in\mathbb{R}^{n\times n}$ correspond to the weight function, $w(E)$. The adjacency matrices of real world graphs are themselves, sparse matrices, with a majority of the entries in the matrix containing zero, or null, values. This has led researchers to frame graph processing in the form of matrix operations like \ac{SPMV} \cite{graphmat}. For example, the out- (in-) degrees of the vertices in the graph can be computed using the matrix-vector product: $A\mathbf{1}^T$ ($A^T\mathbf{1}^T$). However, representing real world graphs as sparse matrices is usually infeasible, due to the $O(n^2)$ memory footprint of the entire adjacency matrix.
+If the graph is weighted, the nonzero values of $A\in\mathbb{R}^{n\times n}$ correspond to the weight function, $w(E)$. The adjacency matrices of real world graphs are themselves sparse matrices, with a majority of the entries in the matrix containing zero, or null, values. In this thesis, we will often use the terms ``graph'' and ``sparse matrix'' interchangeably. This has led researchers to frame graph processing in the form of matrix operations like \ac{SPMV} \cite{graphmat}. For example, the out- (in-) degrees of the vertices in the graph can be computed using the matrix-vector product: $A\mathbf{1}^T$ ($A^T\mathbf{1}^T$). However, representing real world graphs as sparse matrices is usually infeasible, due to the $O(n^2)$ memory footprint of the entire adjacency matrix.
 
 Alternatively, a graph can be represented using an \textbf{Adjacency List} (Figure \ref{fig:graph_example}c), with the vertices of the graph stored in an array.
 % where the vertices are sorted by their ascending Vertex ID. 
@@ -89,7 +91,7 @@ The neighbourhood of vertex $u$ (either $n^{+}(u)$ or $n^{-}(u)$ for the out- or
 Graph algorithms typically rely on the repeated traversal of the neighbourhoods of vertices (e.g., \ac{BFS}, \ac{SSSP}). If the graph is stored using an adjacency list, this traversal will follow neighbouring pointers to iterate over the neighbourhood of each vertex. This raises difficulties for hardware prefetchers, since, assuming the neighbourhood linked list has not been seen in the past, a prefetcher cannot prefetch the data of the next vertex until we've loaded the neighbour pointer of the current vertex. This ``pointer-chasing'' issue hindering performance gains by hardware prefetching can be alleviated by laying out the neighbourhoods in a sorted, contiguous array.
 %  which led to the de-facto in-memory graph data structure, the Compressed Sparse Row/Column (\ac{CSR}/\ac{CSC}).
 
-The \textbf{Compressed Sparse Row/Column (\ac{CSR}/\ac{CSC})} representations (Figure \ref{fig:graph_example}d) achieve this data layout by using two arrays to store the vertices and edges of the graph. The \textbf{Offsets Array}, \texttt{OA}, is an array of size $n+1$ that corresponds to the vertices of the graph. Vertices are stored in \texttt{OA} in ascending order of their vertex ID. The \textbf{Neighbours Array}, \texttt{NA}, is an array of size $m$ that corresponds to the edges of the graph. To iterate over the neighbourhood of vertex $u$, we first retrieve the beginning and end offset of $u$'s neighbourhood from \texttt{OA[u]} and \texttt{OA[u + 1]}. These offsets tell us the range of indices in \texttt{NA} that hold the Vertex IDs of the neighbours of $u$. Vertices within a neighbourhood are sorted by ascending order of their vertex ID. If the graph is weighted, an additional \textbf{Weights Array} of size $m$, \texttt{WA}, stores edge weights. A \ac{CSR} stores the out-edges of the graph, while a \ac{CSC} stores the in-edges of the graph. Using a compressed representation to store the graph achieves the benefits gained by both the adjacency matrix and adjacency list.
+The \textbf{Compressed Sparse Row/Column (\ac{CSR}/\ac{CSC})} representations (Figure \ref{fig:graph_example}d) achieve this data layout by using two arrays to store the vertices and edges of the graph. The \textbf{Offsets Array}, \texttt{OA}, is an array of size $n+1$ that corresponds to the vertices of the graph. Vertices are stored in \texttt{OA} in ascending order of their vertex ID. The \textbf{Neighbours Array}, \texttt{NA}, is an array of size $m$ that corresponds to the edges of the graph. To iterate over the neighbourhood of vertex $u$, we first retrieve the beginning and end \textit{offset} of $u$'s neighbourhood from \texttt{OA[u]} and \texttt{OA[u + 1]}. These offsets tell us the range of indices in \texttt{NA} that contain the Vertex IDs of the neighbours of $u$. Vertices within a neighbourhood are sorted by ascending order of their vertex ID. If the graph is weighted, an additional \textbf{Weights Array} of size $m$, \texttt{WA}, stores edge weights. A \ac{CSR} stores the out-edges of the graph, while a \ac{CSC} stores the in-edges of the graph. Using a compressed representation to store the graph achieves the benefits gained by both the adjacency matrix and adjacency list.
 First, fast Matrix-Vector operations are enabled, since we can access the nonzero values of row $i$ (stored in \texttt{NA[}\texttt{OA[i]}: \texttt{OA[i + 1]}\texttt{]}) sequentially and in constant time.
 Similarly, we no longer require any pointer chasing to iterate over the neighbourhood of vertex $i$ (also stored in \texttt{NA[}\texttt{OA[i]}: \texttt{OA[i + 1]}\texttt{]}).
 
@@ -97,7 +99,7 @@ Similarly, we no longer require any pointer chasing to iterate over the neighbou
 Due to its memory efficiency, the \ac{CSR} representation has become the de-facto data structure for storing graphs in-memory. 
 However, traversals of sparse graphs suffer from \textit{poor-locality} when using the \ac{CSR} representation,
 % However, there due to the sparsity of the graph, traditional graph traversal algorithms suffer from \textit{poor locality} when using the \ac{CSR} representation. 
-with prior work showing that graph algorithms spend a majority of execution time stalled on memory accesses \cite{zhang2016optimizing}. 
+and prior work shows that graph algorithms spend a majority of execution time stalled on memory accesses \cite{zhang2016optimizing}. 
 
 Consider Algorithm \ref{alg:algorithm1}, which is an example of 
 a common graph traversal, where we iterate over the out-neighbourhoods of the vertices of the graph. For each out-neighbour, we access an array of size $n$, \vdata{}, that stores application-specific vertex data.
@@ -107,7 +109,6 @@ Using this figure as reference, we can distinguish between two different types o
     \item \textit{Spatial Locality}: a vertex $u$'s neighbours exhibit \textit{spatial} locality if the ID range of its neighbours is consecutive and/or contiguous. That is, we require a minimal number of cache lines to retrieve the vertices adjacent to $u$. For example, in Figure \ref{fig:irregular_data_access}, we can retrieve $n(u)$ using 4 cache lines, but if $u$'s neighbours were packed closely together, it would be possible to retrieve all of their data using a single cache line.
     \item \textit{Temporal Locality}: a pair of vertices $u, v$ exhibit \textit{temporal} locality if there exist substantial overlap between $n(u)$ and $n(v)$. For example, $u, v$ exhibit perfect temporal locality if $n(u) = n(v)$.
 \end{enumerate}
-\algnewcommand{\LineComment}[1]{\State \(\triangleright\) #1}
 \begin{algorithm}
     \begin{algorithmic}[1]
         \For{$u \in V$:}
@@ -148,12 +149,12 @@ In order to iterate over the vertices of the graph in parallel, a \ac{GPS} must 
 
 % \subsubsection{Balanced Vertex Partitioning}
 Given $t$ threads, \textbf{Balanced Vertex Partitioning} partitions the Vertex Set $V$ into $t$ disjoint sets of size $\frac{n}{t}$. During parallel iteration, thread $t_i$ will process the vertices whose ID lies in the range
-$[t_i \frac{n}{t},t_{i+1} \frac{n}{t})$. This simple partitioning is easy to compute, but will suffer from work imbalance when processing power-law graphs. The threads that process the vertex partitions that contain the hub vertices will need to process a much larger number of edges, and will take a longer time to complete their traversal. This work imbalance will cause other threads to wait idly, poorly affecting parallel performance by not using all available threads at all times.
+$[t_i \frac{n}{t},t_{i+1} \frac{n}{t})$. This simple partitioning is easy to compute, but will suffer from work imbalance when processing power-law graphs. The threads that process the vertex partitions that contain the hub vertices will need to process a much larger number of edges, and will take a longer time to complete their traversal. This work imbalance will cause other threads to wait idly, degrading parallel performance by not using all available threads at all times.
 
 This work imbalance can be easily solved by using \textbf{Balanced Edge Partitioning}. Here, $V$ is partitioned into $t$ partitions, but the number of vertices in each partition may vary. Instead, vertices are added to a partition until the number of incident \textit{edges} in a partition reaches $\frac{m}{t}$. This ensures that the amount of work that is assigned to each thread is roughly proportional. 
 % \subsubsection{Balanced Edge Partitioning}
 
-\subsection{Modes of Computation for Parallel Graph Processing}
+\subsection{Modes of Computation for Parallel Graph Processing}\label{sec:comp_modes}
 
 Once a partitioning strategy is selected, a \ac{GPS} must decide the \textit{direction} of traversal each thread should take when iterating over the neighbourhoods of its assigned vertices. The two natural modes of parallel graph computation are \textit{Push} and \textit{Pull} \cite{ligra, dobfs, pvp}. In \textbf{pull} mode, a thread will iterate over the \textbf{in}-neighbours of a vertex in Line 2 of Algorithm \ref{alg:par_graph_traverse} and \textit{pull} updates from a vertex's neighbours and update the global \vdata{} array. In \textbf{push} mode a thread will iterate over the \textbf{out}-neighbours in Line 2 of Algorithm \ref{alg:par_graph_traverse} and \textit{push} updates to \vdata{}. Deciding on the mode of computation is application dependant, and some systems \cite{ligra, dobfs} alternate between modes for iterative algorithms. It is important to note that in the context of parallel graph processing, there is a distinct advantage to using the \textbf{pull} mode. Specifically, since each thread is assigned a non-overlapping region of the \vdata{} array, in the pull mode, each thread may safely write to its assigned region without need of synchronization. However, in the \textbf{push} mode, threads may arbitrarily write to the same destination vertex's index in the \vdata{} array, which typically requires a form of locking to ensure correctness of execution, and can hinder parallel performance and scalability. 
 
@@ -194,27 +195,38 @@ To address the problems mentioned above, there has been a significant amount of 
 We categorize 
 % Vertex Reordering techniques into lightweight and heavyweight techniques, 
 and provide a few examples 
-of vertex reordering techniques that address the poor locality of graph traversals by laying out the vertices of the graph using different heuristics and methods. Then, we introduce Edge Ordering and the Hilbert Space Filling Curve (\ac{HSFC}), and explain how \citet{cost} used this technique to alleviate the poor locality of the push/pull modes computation. 
+of vertex reordering techniques that address the poor locality of graph traversals by laying out the vertices of the graph using different heuristics and methods. Then, we introduce edge ordering and the Hilbert Space Filling Curve (\ac{HSFC}), and explain how \citet{cost} used this technique to alleviate the poor locality of the push/pull modes of computation. 
 % We first define spatial locality and demonstrate how vertex reordering can improve it. We also categorize vertex reordering techniques into light, mid, and heavyweight techniques and provide examples. Next, we define temporal locality and explain how edge reordering can optimize it. Finally, we introduce the Hilbert Space Filling Curve and highlight its benefits in improving the temporal locality of edge traversals
 
-\subsection{Vertex Reordering}
-A \textit{Vertex Reordering} is simply a relabelling of the vertex IDs. A vertex reordering assigns a new Vertex ID to all the vertices in the graph in an attempt to mitigate the poor access patterns that characterize parallel traversal of graphs. Importantly, relabelling the vertices of a graph does not modify its structure. 
+\subsection{Vertex Reordering}\label{sec:vertex_reorderings}
 
-Vertex reordering techniques leverage well-established properties of real-world graphs to assign IDs to vertices.
-As mentioned previously, the degree-distribution of real-world graphs commonly follows a power-law \cite{barabasi2009scale}. This means that a majority of the edges of the graph are incident to a few hub vertices. As such, vertex reorderings utilize this property to group the hub vertices of the graph, in an attempt to improve spatial and temporal locality. Also, graphs of social and citation networks typically contain subsets of vertices that are part of distinct \textit{communities}  \cite{girvan2002community}. A \textit{community} is a subset of vertices whose edge density between one another is greater than the edge density between other communities. Similarly, the community structure of a graph can be used to relabel the vertices of that graph. Since vertices within a community will likely reference one another, it can be beneficial to assign vertices within a community a contiguous range of vertex IDs.
+
+% A \textit{Vertex Reordering} is simply a relabelling of the vertex IDs. A vertex reordering assigns a new Vertex ID to all the vertices in the graph in an attempt to mitigate the poor access patterns that characterize parallel traversal of graphs. Importantly, relabelling the vertices of a graph does not modify its structure. 
+
+% Vertex reordering techniques leverage well-established properties of real-world graphs to assign IDs to vertices.
+% As mentioned previously, the degree-distribution of real-world graphs commonly follows a power-law \cite{barabasi2009scale}. This means that a majority of the edges of the graph are incident to a few hub vertices. As such, vertex reorderings utilize this property to group the hub vertices of the graph, in an attempt to improve spatial and temporal locality. Also, graphs of social and citation networks typically contain subsets of vertices that are part of distinct \textit{communities}  \cite{girvan2002community}. A \textit{community} is a subset of vertices whose edge density between one another is greater than the edge density between other communities. Similarly, the community structure of a graph can be used to relabel the vertices of that graph. Since vertices within a community will likely reference one another, it can be beneficial to assign vertices within a community a contiguous range of vertex IDs.
+
+% A crucial consideration regarding the applicability and usefulness of a vertex reordering algorithm is the cost and complexity of the reordering computation. Since vertex reordering typically acts as a \textit{preprocessing} step done with the goal of \textit{speeding up} potential downstream graph analytics, the time to compute the reordering must be taken into account when computing performance improvement due to reordering. \citet{lwr} illustrated this by defining \textit{lightweight} vertex reordering techniques as those that improve performance of graph traversal even after accounting for the overhead of reordering. 
+% For sophisticated reordering algorithms with a high computational cost, it may be the case that the downstream analytic tasks only require a few passes through the graphs, and cannot amortize the cost of the reordering. 
+% %  In cases where graph analytics requires processing the graph only a few times, the cost of sophisticated reordering algorithms will not be 
+
+
+
+A \textit{Vertex Reordering} is a relabelling of vertex IDs that improves the access patterns for parallel graph traversal. It does not alter the graph structure. Reordering techniques utilize known properties of real-world graphs, such as power-law degree-distribution \cite{barabasi2009scale} and community structure  \cite{girvan2002community}. For instance, vertices in a community can be assigned contiguous IDs, given the higher likelihood that the vertices reference each other. To calculate the performance improvement due to a vertex reordering, the cost and complexity of the reordering computation must be taken into account since it acts as a preprocessing step to improve performance. So, \textit{lightweight} vertex reorderings that improve overall performance even after accounting for the overhead of preprocessing \cite{lwr} are preferred. Sophisticated algorithms with high computational costs may not be worth it if the downstream analytic tasks only require a few passes through the graphs, or a small number of iterations, which will not amortize the high cost of preprocessing. Below, we introduce a few common vertex orderings that have been prosposed to speed up graph analytics.
+
 
 \subsubsection{Degree-Sort}
 The \textbf{degree-sort} is the canonical example of a \textit{degree-based} vertex reordering algorithm. 
-It involves sorting the vertices of the graph by their degrees, and assigning new vertices new IDs based on their index in either the ascending or descending degree order. A degree-sort groups the hub vertices together such that they fit in the smallest number of cache lines. This improves the temporal locality of access to the hub vertices: since most of the vertices of the graph are adjacent to the hub vertices, accesses to the (now contiguous) region of the \vdata{} array that references the hub vertices' data may benefit from potential reuse as the hubs' vertex data will more likely remain in the shared LLC cache. Certain graph algorithms (e.g., triangle counting) \cite{donato2018triangle, koohi2022lotus} and \ac{GPS} \cite{graptor, powerlyra} benefit from degree-sorting as a preprocessing step in order to optimize their performance. 
+It sorts the vertices of the graph by their degrees, and assigns new vertices new IDs based on their index in either the ascending or descending degree order. A degree-sort groups the hub vertices together so that they fit in the smallest number of cache lines. This improves the temporal locality of access to the hub vertices: since most of the vertices of the graph are adjacent to the hub vertices, accesses to the (now contiguous) region of the \vdata{} array that references the hub vertices' data may benefit from potential reuse as the hubs' vertex data will more likely remain in the shared LLC cache. Certain graph algorithms (e.g., triangle counting) \cite{donato2018triangle, koohi2022lotus} and \ac{GPS} \cite{graptor, powerlyra} benefit from degree-sorting as a preprocessing step in order to optimize their performance. 
 
 
 \subsubsection{Degree-based Methods}
-\citet{dbg} raise an issue with Degree-sort. Certain graph datasets that contain important structures in the form of dense communities already are using a vertex ordering that results in high spatio-temporal locality. For example, hyperlink networks that were crawled by the Laboratory for Web Algorithms use a lexicographical URL ordering to assign IDs to vertices \cite{lwa}. This usefully groups together URLs that belong to the same domain and subdirectories. A degree-sort will destroy this ordering of vertices by ignoring the hierarchical grouping of sites, and only use the degree information of nodes to rearrange the vertices of the graph. 
-To address this concern, researchers posed the following degree-based reorderings, which preserve the structural properties of the original vertex ID assignment (if they exist), and either reorder or cluster the high-degree vertices of the graph. 
+\citet{dbg} raise tne following issue with degree-sort. Certain graph datasets have a ``default'' vertex ID assignment that yields high spatio-temporal locality. For example, hyperlink networks that were crawled by the Laboratory for Web Algorithms use a lexicographical URL ordering to assign IDs to vertices \cite{lwa}. This usefully groups together URLs that belong to the same domain and subdirectories. A degree-sort will destroy this locality present in the ordering of vertices by ignoring the hierarchical grouping of sites, and only use the degree information of nodes to rearrange the vertices of the graph. 
+To address this concern, researchers came up with the following degree-based reorderings, which preserve the structural properties of the original vertex ID assignment (if they exist), and cluster, and optionally reorder,  the high-degree vertices of the graph. 
 \textbf{Hub-sort} \cite{zhang2016optimizing} maintains the original vertex IDs of low-degree vertices, while clustering \textit{and} sorting the high-degree vertices of the graph. As a result, accesses to the \vdata{} array will now benefit from the same spatio-temporal benefits of the degree-sort, without perturbing the structure of the original input graph.
 Relatedly, \textbf{Hub-cluster} \cite{lwr} only clusters the high-degree and low-degree vertices of the graph into separate regions of \vdata{}, \textit{without} reordering the vertices based on their degrees. This reordering closely packs the high-degree vertices, maintains the graph's original structure, and incurs a lower reordering overhead since it does not require a sorting step.
 Figure \ref{fig:degree_based_vertex_orderings} illustrates the degree-based vertex reorderings.
-sdfsdf
+
 % \subsubsection{COrder}
 
 
@@ -230,20 +242,134 @@ sdfsdf
 \end{figure}
 
 
-\subsubsection{Rabbit Order}
+\subsubsection{Rabbit-order}
+Rabbit-order is a vertex reordering that relies on the assumption that the input graph contains a hierarchical community structure with large communities of vertices that contain nested communities of more densely connected subgraphs.  Rabbit-order identifies the hierarchical communities of the graph by iterating over the vertices in ascending degree order. Rabbit-order will search the neighbourhood of each vertex in an attempt to merge the neighbour that yields will the greatest gain in Modularity, $Q$. \citet{rabbit} define the improvement in modularity gained by merging two adjacent vertices $u,v$ as: 
+\[\Delta Q_{u, v} = 2 \left(\frac{w(u, v)}{2n} - \frac{deg(u)deg(v)}{2n^2}\right),\]
+where $w(u,v)$ is the weight of the edge $(u, v)$, $deg(u)$ is the degree of vertex $u$, and $n = |V|$.
+This iterative graph refinement repeats as long as there exists a neighbour $v$ adjacent to $u$ for which 
+$\Delta Q_{u, v} > 0$.
+% the modularity gain is greater than 0. 
+If $u$ has no neighbours to merge, it is added to a set of vertices that act as roots of communities. 
+Rabbit-order completes the hierarchical community detection by performing a parallel \ac{DFS} starting from the root (top-level vertex) of each community. Once the vertices within each nested community are identified, they are assigned consecutive vertex IDs. 
+The goal of Rabbit-order is to map the denser, smaller communities to the lower levels of the cache hierarchy - the private L1, L2 caches - and the larger communities to the shared caches. The authors use lightweight atomic operations to incrementally compute the hierarchical communities, with the aim of not only reducing the runtime of the reordering, but providing \textit{end-to-end} speedup. 
 \subsubsection{SlashBurn}
+SlashBurn relies on the ubiquity of hub vertices in real-world graphs, and their role in connecting the connected components of a graph. SlashBurn is an iterative algorithm that consists of 2 phases: 
+\begin{enumerate}
+    \item \textit{Slash}: identify the hub vertices of the graph, remove them from the graph, and assign the removed hubs consecutive vertex IDs in \textit{descending} order of degree. 
+    \item \textit{Burn}: once the hub vertices have been deleted, (re)compute the new graph's connected components, named \textit{spokes}. 
+    Sort the spokes by \textit{descending} order of size. Assign the vertices in the spokes new Vertex IDs based on the size of their respective connected component.
+\end{enumerate}
+This iterative process continues until the number of hub vertices is smaller than $k$, a user-defined hyperparameter.  
+SlashBurn is unique among the vertex ordering techniques we've discussed in that it reorders the \textit{vertices} of the graph to minimize the storage cost of the graph's \textit{adjacency matrix}. Specifically, \citet{slashburn} are interested in large-scale matrix-vector multiplication operations (See Section \ref{sec:in_mem_structs}), which form the basis for graph algorithms such as PageRank, diameter estimation, and connected components \cite{pegasus}. At the time of publication, the state-of-the-art method for \ac{SPMV} was the \textit{block multiplication} method, where $A$ is split into $b\times b$
+square matrix blocks, the vector to be multiplied, $x$, is split into vector blocks of length $b$, and the matrix-vector blocks are multiplied \cite{pegasus}. The goal of SlashBurn is to produce a \textit{vertex} ordering that clusters the \textit{edges} of the graph: a \textit{smaller} number of \textit{denser} blocks is better than a \textit{larger} number of \textit{sparser} blocks \cite{slashburn}.
+Among the vertex orderings we discussed above, SlashBurn is the only \textit{heavyweight} vertex ordering, with a time complexity of $O(m + n\lg n)i$, where $i$ is the number of iterations to compute the reordering. 
+
+To conclude this section, we illustrate the effect of the various vertex reorderings we described on the adjacency matrix of a social network in Figure \ref{fig:librec-ciaodvd-trust-adj-mats}.
+
+
+
+
+\begin{figure*}[!htb]
+    \begin{adjustwidth}{-0.75in}{-0.75in}
+        \centering
+        \subfloat[]{\includesvg[width=6in]{./figures/librec-ciaodvd-trust-deg-based.svg}}\hfil
+    \end{adjustwidth}
+
+        \subfloat[]{\includesvg[width=5in]{./figures/librec-ciaodvd-trust-other-vorders.svg}}\hfil
+        \centering
+        \caption{
+        The adjacency matrix of the CiaoDVD Social Network graph \cite{konect} after performing vertex reordering using the methods described in \Cref{sec:vertex_reorderings}. A marked blue pixel in the $(i, j)^{\text{th}}$ coordinate of the plot corresponds to the existence of an edge $(i, j)$ in the graph.
+        Expectedly, the \textit{Random} vertex ordering produces a sparse matrix with a uniform distribution of edges. 
+        The degree-based techniques (\textit{Descending Degree Sort, Hub-Cluster, Hub-Sort}) all produce a concentration of edges
+        in the upper-left of the adjacency matrix as a result of the colocation of the hub vertices of the graph. 
+        Note that the boundary between the low- and high-degree vertices of the graph in the Hub-Cluster and Hub-Sort plots produces close-to-identical lower-right quadrants. 
+        \textit{Rabbit-Order} produces clusters along the diagonal of the matrix that correspond to the hierarchical communities in the graph. Lastly, \textit{SlashBurn} concentrates edges to the left, top, and diagonal (the \textit{wings} and \textit{tail}, respectively). This results in an adjacency matrix that requires the smallest number of square blocks to cover the edges among the vertex reordering discussed.  
+        }
+        \label{fig:librec-ciaodvd-trust-adj-mats} 
+\end{figure*}
+
+
 % \subsubsection{LightWeight, HeavyWeight, MidWeight, Slashburn}
 \subsection{Edge Reordering}
-% \subsubsection{Hilbert Curve}
+Next, we divert our attention away from vertex ordering to focus on edge ordering. We discuss the common methods of matrix traversals: Row-major and Column-major, 
+% and observe how they are equivalent to the push/pull modes of parallel graph computation. We 
+introduce the Hilbert Space Filling Curve (\ac{HSFC}), and discuss how \citet{cost} used the \ac{HSFC} to improve the memory access locality of \textit{both} source and destination vertices in \textit{edge-centric} traversal. 
 
-\section{PageRank}
+The two common matrix traversals are Row-major and Column-major (Figure \ref{fig:edge_orders}a., b., respectively).
+% In the context of graph processing, 
+These are identical to the push and pull modes of computation described in Section \ref{sec:comp_modes}. In the context of \textit{dense} graphs (matrices), Row-major traversal traditionally dominates in terms of performance, due to C-style 2D arrays being laid out in this form in memory. This allows kernels that use row-major order to iterate over a dense matrix to benefit from compiler optimizations like prefetching and vectorization. 
+However, real-world graphs are rarely dense, and the sparser a graph is, the less likely that such optimizations will affect performance.
+Specifically, if we iterate over the edges of a sparse graph using the push mode, we experience excellent temporal locality in the dimension of the source vertices, but nearly random access in the dimension of the destination vertices, and vice versa for the pull mode. 
+
+\citet{cost} observed this issue with \textit{vertex-centric} traversals and used the \ac{HSFC} to order the edges of the graph, and reported improved single-threaded performance for \textit{edge-centric} algorithms like PageRank and Connected Components. The \ac{HSFC} was first proposed by \citet{hilbert1935stetige} as a continuous fractal space-filling curve. The Hilbert Curve provides a bidirectional mapping between 2D and 1D space that preserves the locality across the transformation: points that are close to each other in 2D space will remain close in 1D space. 
+This property of locality preservation has led to the use of the \ac{HSFC} in different areas of computer science, like computer graphics \cite{dafner2000context} and storage \cite{lawder2001querying}.
+
+To reorder the edges of the graph using the \ac{HSFC} requires computing the \textit{Hilbert Index} of each edge in the graph. The mapping of the edge $(u,v)$ to its Hilbert Index, $h(u,v)$, can be done using a recursive procedure \cite{hilbert_recursion} whose complexity is $O(\lg(n))$. The mapping can be thought as an interleaving of the bits of $u, v$, which produces the 1D coordinate that preserves the locality of $u, v$ \cite{cost}. This mapping is computed for all the edges of the graph, and then the edges are sorted by ascending $h$, for an overall complexity of $O(m\lg m)$. The \ac{HSFC} sacrifices the excellent 1D locality of the traditional pull/push based traversals, but improves the locality in the dimensions of the source \textit{and} destination vertices of the edges of the graph.
+
+\begin{figure}[!htb]
+    % \begin{adjustwidth}{-0.75in}{-0.75in}
+        \centering
+        \includesvg[width=5in]{./ipe_plots/trav_no_cache.svg}
+        \centering
+        \caption{
+            Common Edge Orderings. 
+        }
+        \centering
+
+        \label{fig:edge_orders}   % label should change
+    % \end{adjustwidth}
+\end{figure}
+
+
+
+% In this chapter, we introduced various graph reordering techniques. 
+% % Recent work compared these and found that certain orderings 
+% % Certain vertex reorderings produce performance improvements in a variety of settings \cite{esfahani2021locality, lwr}, with certain vertex orderings outperforming others for specific algorithms and graphs.
+% Graph reordering research has separately considered the improvements due to vertex reordering and edge reordering. Both techniques produce performance improvements in different contexts (i.e., graph datasets and algorithms), and for separate, and different reasons: 
+% \begin{itemize}
+%     \item \textit{Vertex reordering} reorders the vertices so that the data of vertices that are more likely to reference one another other (e.g., hubs, communities) is contiguous in memory, and so repeated accesses to it can benefit from temporal and spatial locality.
+%     \item \textit{Edge reordering} using the Hilbert Curve sacrifices the sequential access in either the source or destination vertices (depending on the mode of computation), but produces an ordering of the edges that greatly improves the memory access locality in both dimensions of the edges. 
+% \end{itemize}  
+% We note that the two techniques are \textit{not} mutually exclusive.
+% For example, recall that the goal of SlashBurn was to reorder the \textit{vertices} of the graph to produce a compressed representation of the adjacency matrix - the smaller number of denser blocks required to cover the \textit{edges}  of the graph, the better. 
+% A natural extension of graph ordering would be to combine the two approaches by first performing a vertex reordering and then iterating over the edges of the transformed graph using an edge ordering, which naturally leads to the following:
+
+% % \begin{myalg}
+% %     Some thoughts\ldots \label{alg:first}
+% %     \end{myalg}
+
+
+% This research question motivates the next chapter of the thesis, where we will answer it by discussing the results of a case study of performance analysis on $X$ graphs, $Y$ vertex orders, and 3 edge orders. 
+
+In this chapter, we introduced different techniques for reordering graphs, which can improve performance in various ways depending on the dataset and algorithm. 
+\textit{Vertex reordering} reorders vertices to improve temporal and spatial locality by grouping vertices that are more likely to reference each other, such as hubs and communities, together in memory. 
+On the other hand, \textit{edge reordering} using the Hilbert Curve sacrifices sequential access in either the source or destination vertices but improves memory access locality for edges in both source and destination dimensions. 
+We note that these two techniques are not mutually exclusive.
+For example, SlashBurn reorders vertices to create a compressed representation of the edges of the adjacency matrix. Combining vertex and edge ordering could potentially lead to more significant performance improvements, which naturally leads to the following:
+
+\begin{rquestion}
+    Do the benefits of Vertex and Edge orderings compound? For a given graph and algorithm, is there a \textit{Vertex-and-Edge} ordering pair that produces significant performance improvements?  \label{rq:v_e_order_interaction}
+\end{rquestion}
+% Therefore, the research question for the next chapter is whether there exists a vertex-and-edge ordering pair that can significantly improve performance for a given graph and algorithm. 
+The following chapter will answer this question by presenting the results of a case study of performance analysis on X graphs, Y vertex orders, and three edge orders.
+
+
+    % Additionally, not much research has been done into the \textit{interaction} between vertex-and-edge orderings. Namely, 
+    % we take the view advocated by \citet{slashburn}, in that vertex orderings produce adjacency matrices with distinct sparsity and density patterns \ref{fig:librec-ciaodvd-trust-adj-mats}. For example, SlashBurn produces a compressed adjacency matrix whose filled areas are dense. 
+    % These two observations have caused 
+
+    % We conclude this chapter by making an observation that will motivate the case study in the next chapter.
+    % % \subsubsection{Hilbert Curve}
+
+
+% \section{PageRank}
 % Next, we discuss the PageRank algorithm and challenges that arise when attempting to parallelize it. 
 % We introduce the algorithm and reason about why it became such a ubiqutous graph processing benchmark.
 % We differentiate between the two computational modes of the algorithm. Finally, we divert our attention to challenges that arise in the context of parallelization. Finally, we introduce Propagation Blocking, a recent optimization used to improve the spatial locality of parallel PageRank computation.
 
-In the next section, we examine the PageRank algorithm and the difficulties associated with parallelizing it. We present the algorithm and explore its widespread use as a benchmark in graph processing. We distinguish between the two modes of computation that can be used to compute a graph's PageRank algorithm. Then, we focus on the challenges in parallelizing the algorithm. Finally, we introduce Propagation Blocking, a recent optimization aimed at enhancing the spatial locality in parallel PageRank computation.
-\subsection{Pull vs. Push}
-\subsection{Parallelizing Computation}
-\par{
-}
-\subsubsection{Propagation Blocking}
+% In the next section, we examine the PageRank algorithm and the difficulties associated with parallelizing it. We present the algorithm and explore its widespread use as a benchmark in graph processing. We distinguish between the two modes of computation that can be used to compute a graph's PageRank algorithm. Then, we focus on the challenges in parallelizing the algorithm. Finally, we introduce Propagation Blocking, a recent optimization aimed at enhancing the spatial locality in parallel PageRank computation.
+% \subsection{Pull vs. Push}
+% \subsection{Parallelizing Computation}
+% \par{
+% }
+% \subsubsection{Propagation Blocking}

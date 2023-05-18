@@ -1,0 +1,31 @@
+\setlength{\arrayrulewidth}{0.5mm}
+\setlength{\tabcolsep}{18pt}
+\renewcommand{\arraystretch}{1.5}
+
+% \begin{lstlisting}
+% Expand left and right margins by 0.75in
+% Must adjust the perceived column width for LaTeX to get with it.
+% \addtolength{\columnwidth}{1.5in}
+% \[ an extra long math formula \]
+
+\begin{table}
+    \centering
+    \begin{adjustwidth}{-0.75in}{-0.75in}
+
+        \begin{tabular}{ |p{2cm}|p{6cm}|p{5cm}|  }
+            \hline
+            \textbf{Symbol}  & \textbf{Definition}                                                                                                 & \textbf{Notes}                \\
+            \hline
+            $b$ & The sidelength of a block for blocked \ac{SPMV} &           \\
+            \hline
+            $h(u, v)$, $h$ & The Hilbert Index of the edge $(u,v)$ & Assuming 32 bit \uint{}, $h(u, v)$ will be a 64 bit \uint{}         \\
+            \hline
+
+            
+        \end{tabular}
+        \caption{\label{tab:notation2}Notation used in this thesis.}
+    \end{adjustwidth}
+\end{table}
+
+
+% \end{lstlisting}

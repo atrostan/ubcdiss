@@ -56,8 +56,19 @@
             \hline
             $\overline{d}$ & The average degree of the graph & $\frac{m}{n}$            \\
             \hline
+            $k$ & The number of hubs removed at each iteration of SlashBurn & $k = pn$, 
+            where $p$ is a user-defined hyperparameter. e.g., $p = 0.005$, from \cite{slashburn}          \\
+            \hline
+            $y = Ax$ & \ac{SPMV} &$A$ = a sparse matrix (graph), 
+            $x$ dense input vector,
+            $y$ dense output vector             \\
+            \hline
+            % $b$ & The sidelength of a block for blocked \ac{SPMV} &           \\
+            % \hline
+
+            
         \end{tabular}
-        \caption{\label{tab:notation}Notation used in this thesis.}
+        \caption{\label{tab:notation1}Notation used in this thesis.}
     \end{adjustwidth}
 \end{table}
 

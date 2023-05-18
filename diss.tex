@@ -65,6 +65,7 @@
 \usepackage{amsmath}
 \usepackage{amsfonts}
 
+\usepackage{longtable}
 
 \usepackage{blindtext}
 \usepackage{tabularx}
@@ -80,6 +81,17 @@
 \algnewcommand\algorithmicendparfor{\textbf{end\ parallel\_for}}
 \algrenewtext{ParFor}[1]{\algorithmicparfor\ #1\ \algorithmicpardo}
 \algrenewtext{EndParFor}{\algorithmicendparfor}
+\algnewcommand{\LineComment}[1]{\State \(\triangleright\) #1}
+
+\newcounter{rqctr}
+\newenvironment{rquestion}{%      define a custom environment
+   \bigskip\noindent%         create a vertical offset to previous material
+   \refstepcounter{rqctr}% increment the environment's counter
+   \textbf{Research Question \therqctr}% or \textbf, \textit, ...
+   \newline%
+   }{\par\bigskip}  %          create a vertical offset to following material
+% \numberwithin{rqctr}{chapter}
+
 %% The pifont package provides access to the elements in the dingbat font.   
 %% Use \ding{##} for a particular dingbat (see p7 of psnfss2e.pdf)
 %%   Useful:
@@ -402,6 +414,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % frequently used terms
 \newcommand{\vdata}{\texttt{v\_data}}
+\newcommand{\uint}{\texttt{unsigned int}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 

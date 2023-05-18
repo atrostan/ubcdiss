@@ -65,6 +65,17 @@
   year      = {2015}
 }
 
+@inproceedings{dafner2000context,
+  title        = {Context-based space filling curves},
+  author       = {Dafner, Revital and Cohen-Or, Daniel and Matias, Yossi},
+  booktitle    = {Computer Graphics Forum},
+  volume       = {19},
+  number       = {3},
+  pages        = {209--218},
+  year         = {2000},
+  organization = {Wiley Online Library}
+}
+
 @inproceedings{danisch2018listing,
   title     = {Listing k-cliques in sparse real-world graphs},
   author    = {Danisch, Maximilien and Balalau, Oana and Sozio, Mauro},
@@ -128,6 +139,9 @@
   publisher = {IEEE}
 }
 
+
+
+
 @article{girvan2002community,
   title     = {Community structure in social and biological networks},
   author    = {Girvan, Michelle and Newman, Mark EJ},
@@ -138,9 +152,6 @@
   year      = {2002},
   publisher = {National Acad Sciences}
 }
-
-
-
 
 @inproceedings{gpop,
   title     = {GPOP: A cache and memory-efficient framework for graph processing over partitions},
@@ -173,6 +184,11 @@
   year      = {2020}
 }
 
+
+
+
+######################################################################################################### 
+Benchmarks
 @article{heidari2018scalable,
   title     = {Scalable graph processing frameworks: A taxonomy and open challenges},
   author    = {Heidari, Safiollah and Simmhan, Yogesh and Calheiros, Rodrigo N and Buyya, Rajkumar},
@@ -185,10 +201,28 @@
 }
 
 
-
-
 ######################################################################################################### 
-Benchmarks
+# Direct comparison - context
+@article{hilbert_recursion,
+  title     = {Algorithm 781: Generating Hilbert's space-filling curve by recursion},
+  author    = {Breinholt, Greg and Schierz, Christoph},
+  journal   = {ACM Transactions on Mathematical Software (TOMS)},
+  volume    = {24},
+  number    = {2},
+  pages     = {184--189},
+  year      = {1998},
+  publisher = {ACM New York, NY, USA}
+}
+
+@article{hilbert1935stetige,
+  title     = {{\"U}ber die stetige Abbildung einer Linie auf ein Fl{\"a}chenst{\"u}ck},
+  author    = {Hilbert, David},
+  journal   = {Dritter Band: Analysis{\textperiodcentered} Grundlagen der Mathematik{\textperiodcentered} Physik Verschiedenes: Nebst Einer Lebensgeschichte},
+  pages     = {1--2},
+  year      = {1935},
+  publisher = {Springer}
+}
+
 @inproceedings{iHTL,
   title     = {Exploiting in-Hub Temporal Locality in SpMV-based Graph Processing},
   author    = {Koohi Esfahani, Mohsen and Kilpatrick, Peter and Vandierendonck, Hans},
@@ -197,9 +231,6 @@ Benchmarks
   year      = {2021}
 }
 
-
-######################################################################################################### 
-# Direct comparison - context
 @inproceedings{kiczales-1997-aop,
   author    = {Kiczales, Gregor and Lamping, John and
                Mendhekar, Anurag and Maeda, Chris and
@@ -224,6 +255,7 @@ Benchmarks
   year      = {2013}
 }
 
+
 @inproceedings{koohi2022lotus,
   title     = {LOTUS: Locality optimizing triangle counting},
   author    = {Koohi Esfahani, Mohsen and Kilpatrick, Peter and Vandierendonck, Hans},
@@ -241,6 +273,19 @@ Benchmarks
   publisher = {Addison-Wesley},
   isbn      = 0201529831
 }
+
+
+@article{lawder2001querying,
+  title     = {Querying multi-dimensional data indexed using the Hilbert space-filling curve},
+  author    = {Lawder, Jonathan K. and King, Peter J. H.},
+  journal   = {ACM Sigmod Record},
+  volume    = {30},
+  number    = {1},
+  pages     = {19--24},
+  year      = {2001},
+  publisher = {ACM New York, NY, USA}
+}
+
 
 @article{leskovec2012learning,
   title   = {Learning to discover social circles in ego networks},
@@ -267,7 +312,6 @@ Benchmarks
   year      = {2018}
 }
 
-
 @inproceedings{lwa,
   author    = {Paolo Boldi and Sebastiano Vigna},
   title     = {The {W}eb{G}raph Framework {I}: {C}ompression Techniques},
@@ -278,14 +322,13 @@ Benchmarks
   publisher = {ACM Press}
 }
 
-
+// real world graphs are sparse 
 @inproceedings{lwr,
   title     = {When is Graph Reordering an Optimization?},
   author    = {Balaji, Vignesh and Lucia, Brandon},
   booktitle = {IEEE International Symposium on Workload Characterization (IISWC)},
   year      = {2018}
 }
-
 
 @inproceedings{mosaic,
   title     = {Mosaic: Processing a trillion-edge graph on a single machine},
@@ -295,6 +338,7 @@ Benchmarks
   year      = {2017}
 }
 
+// graph algorithms stall on memory accesses
 @misc{openmp,
   author = {{OpenMP Architecture Review Board}},
   title  = {{OpenMP} Application Program Interface Version 5.1},
@@ -303,6 +347,7 @@ Benchmarks
   url    = {https://www.openmp.org/wp-content/uploads/OpenMP-API-Specification-5-1.pdf}
 }
 
+// also contains several references about the widespread use of degree sort as a baseline
 @inproceedings{pcpm,
   title     = {Accelerating pagerank using partition-centric processing},
   author    = {Lakhotia, Kartik and Kannan, Rajgopal and Prasanna, Viktor},
@@ -311,7 +356,17 @@ Benchmarks
   year      = {2018}
 }
 
-// real world graphs are sparse 
+
+@article{pegasus,
+  title     = {Pegasus: mining peta-scale graphs},
+  author    = {Kang, U and Tsourakakis, Charalampos E and Faloutsos, Christos},
+  journal   = {Knowledge and information systems},
+  volume    = {27},
+  pages     = {303--325},
+  year      = {2011},
+  publisher = {Springer}
+}
+
 @article{powerlyra,
   title     = {Powerlyra: Differentiated graph computation and partitioning on skewed graphs},
   author    = {Chen, Rong and Shi, Jiaxin and Chen, Yanzhe and Zang, Binyu and Guan, Haibing and Chen, Haibo},
@@ -323,6 +378,7 @@ Benchmarks
   publisher = {ACM New York, NY, USA}
 }
 
+
 @inproceedings{propagationblocking,
   title        = {Reducing PageRank communication via propagation blocking},
   author       = {Beamer, Scott and Asanovi{\'c}, Krste and Patterson, David},
@@ -332,7 +388,6 @@ Benchmarks
   organization = {IEEE}
 }
 
-// graph algorithms stall on memory accesses
 @inproceedings{pvp,
   title     = {To push or to pull: On reducing communication and synchronization in graph computations},
   author    = {Besta, Maciej and Podstawski, Micha{\l} and Groner, Linus and Solomonik, Edgar and Hoefler, Torsten},
@@ -341,7 +396,6 @@ Benchmarks
   year      = {2017}
 }
 
-// also contains several references about the widespread use of degree sort as a baseline
 @inproceedings{rabbit,
   title        = {Rabbit order: Just-in-time parallel reordering for fast graph analysis},
   author       = {Arai, Junya and Shiokawa, Hiroaki and Yamamuro, Takeshi and Onizuka, Makoto and Iwamura, Sotetsu},
@@ -351,7 +405,6 @@ Benchmarks
   organization = {IEEE}
 }
 
-
 @book{rowling-1997-hpps,
   author    = {Rowling, Joanna K.},
   title     = {Harry Potter and the Philospher's Stone},
@@ -359,6 +412,7 @@ Benchmarks
   publisher = {Bloomsbury},
   isbn      = 0747532699
 }
+
 
 @inproceedings{sapco,
   title        = {SAPCo Sort: Optimizing Degree-Ordering for Power-Law Graphs},
@@ -368,7 +422,6 @@ Benchmarks
   year         = {2022},
   organization = {IEEE}
 }
-
 
 @article{slashburn,
   title     = {Slashburn: Graph compression and mining beyond caveman communities},
@@ -380,6 +433,7 @@ Benchmarks
   year      = {2014},
   publisher = {IEEE}
 }
+
 
 @inproceedings{spray,
   title        = {Spray: Sparse reductions of arrays in OpenMP},
@@ -399,6 +453,7 @@ Benchmarks
   organization = {IEEE}
 }
 
+
 @article{syze,
   title     = {An Unequal Caching Strategy for Shared-Memory Graph Analytics},
   author    = {Chen, YuAng and Chung, Yeh-Ching},
@@ -406,7 +461,6 @@ Benchmarks
   year      = {2023},
   publisher = {IEEE}
 }
-
 
 @inproceedings{xstream,
   title     = {X-stream: Edge-centric graph processing using streaming partitions},
@@ -427,7 +481,6 @@ Benchmarks
   publisher = {Springer}
 }
 
-
 @incollection{yzelman2012cache,
   title     = {A cache-oblivious sparse matrix--vector multiplication scheme based on the Hilbert curve},
   author    = {Yzelman, Albert-Jan N and Bisseling, Rob H},
@@ -437,6 +490,9 @@ Benchmarks
   publisher = {Springer}
 }
 
+
+
+
 @article{zhang2016optimizing,
   title     = {Optimizing cache performance for graph analytics},
   author    = {Zhang, Yunming and Kiriansky, Vladimir and Mendis, Charith and Zaharia, Matei and Amarasinghe, Saman},
@@ -444,5 +500,4 @@ Benchmarks
   year      = {2016},
   publisher = {CoRR}
 }
-
 
